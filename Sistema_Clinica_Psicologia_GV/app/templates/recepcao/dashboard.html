@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="fw-bold text-gv-primary mb-4">Painel da Recepção</h2>
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card border-0 shadow-sm p-3"><small class="text-muted fw-bold">PACIENTES CADASTRADOS</small><h3>{{ total_pacientes }}</h3></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm p-3"><small class="text-muted fw-bold">CONSULTAS PENDENTES</small><h3 class="text-warning">{{ pendentes }}</h3></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm p-3"><small class="text-muted fw-bold">CANCELAMENTOS</small><h3 class="text-danger">{{ cancelamentos }}</h3></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm p-3"><small class="text-muted fw-bold">PAGAMENTOS PENDENTES</small><h3 class="text-primary">{{ pgtos_pendentes }}</h3></div></div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center">
+        <span>Consultas de Hoje</span>
+        <a href="{{ url_for('recepcao.agenda') }}" class="btn btn-sm btn-gv-primary">+ Nova Consulta</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead class="table-light"><tr><th>Horário</th><th>Paciente</th><th>Psicólogo</th><th>Status</th><th>Ações Rápidas</th></tr></thead>
+            <tbody>
+                {% for c in consultas_hoje %}
+                <tr>
+                    <td class="fw-bold">{{ c.data_hora.strftime('%H:%M') }}</td>
+                    <td>{{ c.paciente.nome_completo }}</td>
+                    <td>{{ c.psicologo.usuario.nome }}</td>
+                    <td><span class="badge bg-info text-dark">{{ c.status }}</span></td>
+                    <td>
+                        <form method="POST" action="{{ url_for('recepcao.atualizar_status_consulta', consulta_id=c.id) }}" class="d-inline">
+                            <input type="hidden" name="status" value="CONFIRMADA">
+                            <button class="btn btn-sm btn-success">Confirmar</button>
+                        </form>
+                        <form method="POST" action="{{ url_for('recepcao.atualizar_status_consulta', consulta_id=c.id) }}" class="d-inline">
+                            <input type="hidden" name="status" value="CANCELADA">
+                            <button class="btn btn-sm btn-outline-danger">Cancelar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-center text-muted py-3">Nenhuma consulta hoje.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

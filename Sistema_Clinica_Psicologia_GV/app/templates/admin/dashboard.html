@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-gv-primary mb-0">Painel Administrativo</h2>
+        <small class="text-muted">Visão geral financeira, operacional e gerencial da clínica</small>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('admin.exportar_excel') }}" class="btn btn-success fw-bold">
+            <i class="bi bi-file-earmark-excel-fill"></i> Gerar Relatório Excel (.xlsx)
+        </a>
+        <a href="{{ url_for('admin.logs') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-shield-check"></i> Logs de Segurança
+        </a>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm p-3 border-start border-4 border-primary">
+            <small class="text-muted fw-bold">PACIENTES ATIVOS / TOTAL</small>
+            <h3 class="fw-bold mt-1 mb-0">{{ pacientes_ativos }} / {{ total_pacientes }}</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm p-3 border-start border-4 border-info">
+            <small class="text-muted fw-bold">CONSULTAS NO MÊS</small>
+            <h3 class="fw-bold mt-1 mb-0">{{ total_consultas_mes }}</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm p-3 border-start border-4 border-success">
+            <small class="text-muted fw-bold">RECEITA RECEBIDA</small>
+            <h3 class="fw-bold text-success mt-1 mb-0">R$ {{ "%.2f"|format(receita_total) }}</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm p-3 border-start border-4 border-warning">
+            <small class="text-muted fw-bold">PGTOS PENDENTES / FALTAS</small>
+            <h3 class="fw-bold mt-1 mb-0">{{ pagamentos_pendentes }} / {{ faltas_cancelamentos }}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white fw-bold text-gv-primary">
+        <i class="bi bi-calendar-day"></i> Consultas de Hoje
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Horário</th>
+                    <th>Paciente</th>
+                    <th>Psicólogo</th>
+                    <th>Sala</th>
+                    <th>Status</th>
+                    <th>Pagamento</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in consultas_hoje %}
+                <tr>
+                    <td class="fw-bold">{{ c.data_hora.strftime('%H:%M') }}</td>
+                    <td>{{ c.paciente.nome_completo }}</td>
+                    <td>{{ c.psicologo.usuario.nome }}</td>
+                    <td>{{ c.sala }}</td>
+                    <td><span class="badge bg-primary">{{ c.status }}</span></td>
+                    <td>
+                        {% if c.pagamento and c.pagamento.status == 'PAGO' %}
+                            <span class="badge bg-success">PAGO</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">PENDENTE</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="text-center text-muted py-4">Nenhuma consulta agendada para hoje.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

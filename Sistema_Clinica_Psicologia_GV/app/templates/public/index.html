@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-5 mb-4 bg-white rounded-4 shadow-sm border text-center">
+    <img src="{{ url_for('static', filename='img/logo_gv.png') }}" alt="Logo Graziele Venancio Psicóloga" style="max-height: 160px;" class="mb-3">
+    <h1 class="display-6 fw-bold text-gv-primary">{{ config.nome_clinica if config else 'Clínica de Psicologia Graziele Venancio' }}</h1>
+    <p class="lead text-muted col-md-8 mx-auto">
+        Acolhimento psicológico, Neuropsicologia e Psicodiagnóstico com excelência ética, sigilo profissional e acompanhamento humanizado.
+    </p>
+    <div class="mt-4">
+        <a href="{{ url_for('public.login') }}" class="btn btn-gv-primary btn-lg px-4 me-2"><i class="bi bi-person-badge"></i> Acessar Sistema</a>
+        <a href="#quem-somos" class="btn btn-outline-primary btn-lg px-4">Conheça Nossa Especialista</a>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-3">
+            <div class="card-body">
+                <h5 class="fw-bold text-gv-primary"><i class="bi bi-brain"></i> Neuropsicologia</h5>
+                <p class="text-muted mb-0">Avaliação neuropsicológica completa infantojuvenil e adulto, investigação cognitiva e reabilitação.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-3">
+            <div class="card-body">
+                <h5 class="fw-bold text-gv-primary"><i class="bi bi-clipboard2-pulse"></i> Psicodiagnóstico</h5>
+                <p class="text-muted mb-0">Elaboração de anamneses, relatórios semanais e laudos psicológicos rigorosamente alinhados à Resolução CFP 06/2019.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-3">
+            <div class="card-body">
+                <h5 class="fw-bold text-gv-primary"><i class="bi bi-heart-pulse"></i> Psicoterapia Clínica</h5>
+                <p class="text-muted mb-0">Atendimento individualizado com foco em desenvolvimento emocional, comportamental e bem-estar.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Seção Quem Somos Nós lá embaixo com a foto anexada do doutor especialista -->
+<section id="quem-somos" class="bg-white rounded-4 shadow-sm border p-4 p-md-5 mt-5">
+    <div class="row align-items-center g-4">
+        <div class="col-md-4 text-center">
+            <img src="{{ url_for('static', filename='img/dra_graziele.png') }}" alt="Foto Especialista" class="img-fluid rounded-4 shadow" style="max-height: 360px; object-fit: cover;">
+        </div>
+        <div class="col-md-8">
+            <span class="badge bg-primary-subtle text-primary mb-2 px-3 py-2">Especialista Responsável</span>
+            <h2 class="fw-bold text-gv-primary">{{ config.quem_somos_titulo if config else 'Quem Somos Nós' }}</h2>
+            <h4 class="fw-semibold text-dark mt-2">{{ config.especialista_nome if config else 'Dra. Graziele Venancio' }}</h4>
+            <p class="text-primary fw-bold mb-3">{{ config.especialista_crp if config else 'CRP 06/123456' }}</p>
+            <p class="text-muted">{{ config.quem_somos_texto if config else '' }}</p>
+            <p class="text-muted">{{ config.especialista_formacao if config else '' }}</p>
+            <hr>
+            <div class="row text-muted small">
+                <div class="col-md-6">
+                    <p class="mb-1"><i class="bi bi-geo-alt-fill text-primary"></i> <strong>Endereço:</strong> {{ config.endereco if config else '' }}</p>
+                    <p class="mb-1"><i class="bi bi-telephone-fill text-primary"></i> <strong>Telefone:</strong> {{ config.telefone if config else '' }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-1"><i class="bi bi-envelope-fill text-primary"></i> <strong>E-mail:</strong> {{ config.email_contato if config else '' }}</p>
+                    <p class="mb-1"><i class="bi bi-building text-primary"></i> <strong>CNPJ:</strong> {{ config.cnpj if config else '' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

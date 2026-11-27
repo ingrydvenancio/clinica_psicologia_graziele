@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3 class="fw-bold text-gv-primary mb-0">Prontuário Psicológico — {{ paciente.nome_completo }}</h3>
+        <small class="text-muted">CPF: {{ paciente.cpf }} | Consulta: {{ consulta.data_hora.strftime('%d/%m/%Y %H:%M') }} | Status: {{ consulta.status }}</small>
+    </div>
+    <a href="{{ url_for('psicologo.relatorios_clinicos') }}" class="btn btn-outline-primary">Emitir Relatório / Anamnese / Laudo</a>
+</div>
+
+<form method="POST" class="card border-0 shadow-sm p-4 mb-4">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Queixa Principal</label>
+            <textarea name="queixa_principal" class="form-control" rows="2">{{ prontuario.queixa_principal or '' }}</textarea>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Hipótese Diagnóstica / Avaliação</label>
+            <textarea name="hipotese_diagnostica" class="form-control" rows="2">{{ prontuario.hipotese_diagnostica or '' }}</textarea>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Anamnese Resumida</label>
+            <textarea name="anamnese_geral" class="form-control" rows="3">{{ prontuario.anamnese_geral or '' }}</textarea>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Plano Terapêutico</label>
+            <textarea name="plano_terapeutico" class="form-control" rows="3">{{ prontuario.plano_terapeutico or '' }}</textarea>
+        </div>
+        <hr>
+        <h5 class="fw-bold text-gv-primary">Registrar Evolução da Sessão Atual</h5>
+        <div class="col-12">
+            <label class="form-label fw-bold">Registro da Sessão *</label>
+            <textarea name="descricao_sessao" class="form-control" rows="3" placeholder="Descreva a evolução clínica observada nesta sessão..."></textarea>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Observações Clínicas</label>
+            <textarea name="observacoes_clinicas" class="form-control" rows="2"></textarea>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Encaminhamentos</label>
+            <textarea name="encaminhamentos" class="form-control" rows="2"></textarea>
+        </div>
+        <div class="col-12 d-flex gap-2">
+            <button type="submit" name="finalizar_consulta" value="0" class="btn btn-primary">Salvar Evolução</button>
+            <button type="submit" name="finalizar_consulta" value="1" class="btn btn-success fw-bold">Finalizar Atendimento e Salvar</button>
+        </div>
+    </div>
+</form>
+
+<h5 class="fw-bold text-gv-primary">Histórico de Evoluções</h5>
+{% for ev in evolucoes %}
+<div class="card border-0 shadow-sm p-3 mb-2">
+    <small class="text-muted fw-bold">{{ ev.data_registro.strftime('%d/%m/%Y %H:%M') }}</small>
+    <p class="mb-1 mt-1">{{ ev.descricao_sessao }}</p>
+    {% if ev.observacoes_clinicas %}<small class="text-muted"><strong>Obs:</strong> {{ ev.observacoes_clinicas }}</small>{% endif %}
+</div>
+{% endfor %}
+{% endblock %}

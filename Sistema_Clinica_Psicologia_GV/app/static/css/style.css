@@ -1,0 +1,19 @@
+.bg-gv-primary {
+    background: linear-gradient(135deg, #0b2545 0%, #134074 100%);
+}
+.text-gv-primary {
+    color: #0b2545;
+}
+.btn-gv-primary {
+    background-color: #134074;
+    border-color: #134074;
+    color: #fff;
+}
+.btn-gv-primary:hover {
+    background-color: #0b2545;
+    border-color: #0b2545;
+    color: #fff;
+}
+@media print {
+    .no-print { display: none !important; }
+}

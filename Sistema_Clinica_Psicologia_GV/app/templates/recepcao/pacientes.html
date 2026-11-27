@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="fw-bold text-gv-primary mb-3">Cadastro e Gestão de Pacientes</h3>
+<div class="card border-0 shadow-sm p-4 mb-4">
+    <h5 class="fw-bold mb-3">Novo Paciente</h5>
+    <form method="POST" class="row g-3">
+        <div class="col-md-5"><label class="form-label">Nome Completo *</label><input type="text" name="nome_completo" class="form-control" required></div>
+        <div class="col-md-3"><label class="form-label">CPF *</label><input type="text" name="cpf" class="form-control" placeholder="000.000.000-00" required></div>
+        <div class="col-md-4"><label class="form-label">Data de Nascimento *</label><input type="date" name="data_nascimento" class="form-control" required></div>
+        <div class="col-md-4"><label class="form-label">Telefone *</label><input type="text" name="telefone" class="form-control" required></div>
+        <div class="col-md-4"><label class="form-label">E-mail (para alerta de 5 dias)</label><input type="email" name="email" class="form-control"></div>
+        <div class="col-md-4"><label class="form-label">Contato de Emergência</label><input type="text" name="contato_emergencia" class="form-control"></div>
+        <div class="col-md-6"><label class="form-label">Endereço</label><input type="text" name="endereco" class="form-control"></div>
+        <div class="col-md-6">
+            <label class="form-label">Psicólogo Responsável</label>
+            <select name="psicologo_id" class="form-select">
+                <option value="">-- Selecione --</option>
+                {% for psi in psicologos %}<option value="{{ psi.id }}">{{ psi.usuario.nome }} ({{ psi.crp }})</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-12"><label class="form-label">Observações Administrativas</label><input type="text" name="observacoes_admin" class="form-control"></div>
+        <div class="col-12"><button type="submit" class="btn btn-gv-primary">Salvar Paciente</button></div>
+    </form>
+</div>
+
+<form method="GET" class="input-group mb-3">
+    <input type="text" name="q" value="{{ busca }}" class="form-control" placeholder="Pesquisar paciente por nome, CPF ou telefone...">
+    <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
+</form>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light"><tr><th>Nome</th><th>CPF</th><th>Telefone</th><th>E-mail</th><th>Psicólogo</th><th>Status</th></tr></thead>
+            <tbody>
+                {% for p in pacientes %}
+                <tr>
+                    <td class="fw-bold">{{ p.nome_completo }}</td>
+                    <td>{{ p.cpf }}</td>
+                    <td>{{ p.telefone }}</td>
+                    <td>{{ p.email or '-' }}</td>
+                    <td>{{ p.psicologo_responsavel.usuario.nome if p.psicologo_responsavel else '-' }}</td>
+                    <td><span class="badge bg-success">{{ p.status }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

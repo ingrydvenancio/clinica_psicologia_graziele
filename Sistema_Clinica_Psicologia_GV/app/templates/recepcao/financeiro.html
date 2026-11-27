@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="fw-bold text-gv-primary mb-3">Controle Financeiro e Recibos</h3>
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light"><tr><th>Recibo</th><th>Data Consulta</th><th>Paciente</th><th>Valor Final</th><th>Forma</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody>
+                {% for p in pagamentos %}
+                <tr>
+                    <td>{{ p.recibo_numero }}</td>
+                    <td>{{ p.consulta.data_hora.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>{{ p.consulta.paciente.nome_completo }}</td>
+                    <td class="fw-bold">R$ {{ "%.2f"|format(p.valor_final) }}</td>
+                    <td>{{ p.forma_pagamento }}</td>
+                    <td><span class="badge {{ 'bg-success' if p.status == 'PAGO' else 'bg-warning text-dark' }}">{{ p.status }}</span></td>
+                    <td>
+                        {% if p.status != 'PAGO' %}
+                        <form method="POST" action="{{ url_for('recepcao.confirmar_pagamento', pgto_id=p.id) }}" class="d-inline">
+                            <button class="btn btn-sm btn-success">Baixar Pagamento</button>
+                        </form>
+                        {% endif %}
+                        <a href="{{ url_for('recepcao.emitir_recibo', pgto_id=p.id) }}" target="_blank" class="btn btn-sm btn-outline-primary">Recibo</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

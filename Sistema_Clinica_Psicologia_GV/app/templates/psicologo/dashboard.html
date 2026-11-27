@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-gv-primary mb-0">Área do Especialista — {{ psi.usuario.nome }}</h2>
+        <small class="text-muted">{{ psi.crp }} | {{ psi.especialidade }}</small>
+    </div>
+    <a href="{{ url_for('psicologo.relatorios_clinicos') }}" class="btn btn-gv-primary fw-bold">
+        <i class="bi bi-file-earmark-medical"></i> Preencher Relatórios / Anamnese / Laudo
+    </a>
+</div>
+
+{% if notificacoes %}
+<div class="card border-warning shadow-sm mb-4">
+    <div class="card-header bg-warning-subtle fw-bold text-dark">
+        <i class="bi bi-bell-fill"></i> Notificações do Calendário (Alertas de 5 dias corridos & Confirmações)
+    </div>
+    <ul class="list-group list-group-flush">
+        {% for n in notificacoes %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>{{ n.titulo }}:</strong> {{ n.mensagem }}
+                <small class="text-muted d-block">{{ n.criada_em.strftime('%d/%m/%Y %H:%M') }}</small>
+            </div>
+            <form method="POST" action="{{ url_for('psicologo.ler_notificacao', notif_id=n.id) }}">
+                <button class="btn btn-sm btn-outline-secondary">Marcar como lida</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white fw-bold text-gv-primary">Consultas de Hoje</div>
+            <div class="list-group list-group-flush">
+                {% for c in consultas_hoje %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ c.data_hora.strftime('%H:%M') }} — {{ c.paciente.nome_completo }}</strong>
+                        <span class="badge bg-info text-dark ms-2">{{ c.status }}</span>
+                    </div>
+                    <a href="{{ url_for('psicologo.atendimento', consulta_id=c.id) }}" class="btn btn-sm btn-success">
+                        Iniciar / Prontuário
+                    </a>
+                </div>
+                {% else %}
+                <div class="p-3 text-muted">Nenhuma consulta agendada para hoje.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white fw-bold text-gv-primary">Próximas Consultas Agendadas</div>
+            <div class="list-group list-group-flush">
+                {% for c in proximas_consultas %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ c.data_hora.strftime('%d/%m %H:%M') }} — {{ c.paciente.nome_completo }}</strong>
+                        <span class="badge bg-secondary ms-1">{{ c.status }}</span>
+                    </div>
+                    <a href="{{ url_for('psicologo.atendimento', consulta_id=c.id) }}" class="btn btn-sm btn-outline-primary">Abrir Prontuário</a>
+                </div>
+                {% else %}
+                <div class="p-3 text-muted">Sem próximas consultas agendadas.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm p-4">
+    <h5 class="fw-bold text-gv-primary mb-3">Meu Calendário de Agendamentos</h5>
+    <div id="calendarioPsicologo"></div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendarioPsicologo');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        locale: 'pt-br',
+        headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay' },
+        events: '{{ url_for("recepcao.api_eventos_calendario") }}'
+    });
+    calendar.render();
+});
+</script>
+{% endblock %}

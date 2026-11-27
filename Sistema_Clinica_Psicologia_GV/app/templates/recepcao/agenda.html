@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<h3 class="fw-bold text-gv-primary mb-3">Agenda de Consultas & Calendário Interativo</h3>
+<div class="alert alert-info small">
+    <i class="bi bi-bell-fill"></i> <strong>Automação Ativa:</strong> Quando faltar exatamente <strong>5 dias corridos</strong> para a consulta, o sistema envia automaticamente um e-mail ao paciente para confirmar presença e notifica o calendário do psicólogo.
+</div>
+
+<div class="card border-0 shadow-sm p-4 mb-4">
+    <h5 class="fw-bold mb-3">Agendar Nova Consulta</h5>
+    <form method="POST" class="row g-3">
+        <div class="col-md-4">
+            <label class="form-label">Paciente *</label>
+            <select name="paciente_id" class="form-select" required>
+                {% for p in pacientes %}<option value="{{ p.id }}">{{ p.nome_completo }} ({{ p.cpf }})</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Psicólogo Especialista *</label>
+            <select name="psicologo_id" class="form-select" required>
+                {% for psi in psicologos %}<option value="{{ psi.id }}">{{ psi.usuario.nome }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2"><label class="form-label">Data *</label><input type="date" name="data" class="form-control" required></div>
+        <div class="col-md-2"><label class="form-label">Horário *</label><input type="time" name="hora" class="form-control" required></div>
+        <div class="col-md-2"><label class="form-label">Sala</label><input type="text" name="sala" class="form-control" value="Sala 01"></div>
+        <div class="col-md-2"><label class="form-label">Valor (R$)</label><input type="number" step="0.01" name="valor" class="form-control" value="{{ config.valor_consulta_padrao if config else 180.0 }}"></div>
+        <div class="col-md-2"><label class="form-label">Desconto (R$)</label><input type="number" step="0.01" name="desconto" class="form-control" value="0"></div>
+        <div class="col-md-3"><label class="form-label">Convênio</label><input type="text" name="convenio" class="form-control" value="Particular"></div>
+        <div class="col-md-3">
+            <label class="form-label">Forma Pagamento</label>
+            <select name="forma_pagamento" class="form-select">
+                <option value="PIX">PIX</option><option value="DINHEIRO">Dinheiro</option>
+                <option value="CARTAO_CREDITO">Cartão Crédito</option><option value="CARTAO_DEBITO">Cartão Débito</option>
+                <option value="CONVENIO">Convênio</option>
+            </select>
+        </div>
+        <div class="col-12"><button type="submit" class="btn btn-gv-primary">Confirmar Agendamento</button></div>
+    </form>
+</div>
+
+<div class="card border-0 shadow-sm p-4 mb-4">
+    <div id="calendario"></div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white fw-bold">Lista de Consultas (Remarcar / Status)</div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light"><tr><th>Data/Hora</th><th>Paciente</th><th>Psicólogo</th><th>Status</th><th>Alerta 5d</th><th>Gerenciar</th></tr></thead>
+            <tbody>
+                {% for c in consultas %}
+                <tr>
+                    <td>{{ c.data_hora.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>{{ c.paciente.nome_completo }}</td>
+                    <td>{{ c.psicologo.usuario.nome }}</td>
+                    <td><span class="badge bg-secondary">{{ c.status }}</span></td>
+                    <td>{{ 'Enviado' if c.alerta_5dias_enviado else 'Aguardando' }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('recepcao.atualizar_status_consulta', consulta_id=c.id) }}" class="d-flex gap-1">
+                            <select name="status" class="form-select form-select-sm">
+                                <option value="CONFIRMADA">Confirmar</option>
+                                <option value="CANCELADA">Cancelar</option>
+                                <option value="FALTA">Registrar Falta</option>
+                            </select>
+                            <button class="btn btn-sm btn-primary">OK</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendario');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'pt-br',
+        headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay' },
+        events: '{{ url_for("recepcao.api_eventos_calendario") }}'
+    });
+    calendar.render();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mb-4">
+    <h2 class="fw-bold text-gv-primary mb-1">Emissão de Relatórios, Anamnese e Laudos Clínicos</h2>
+    <p class="text-muted">
+        Modelos oficiais padronizados. Ao gerar, o arquivo é salvo automaticamente no Explorador de Arquivos na pasta <code>documentos_gerados/&lt;Paciente_Mes_Ano&gt;/</code> e baixado em <strong>PDF</strong> ou <strong>.DOCX</strong>.
+    </p>
+</div>
+
+<ul class="nav nav-tabs mb-4" id="modelosTab" role="tablist">
+    <li class="nav-item"><button class="nav-link active fw-bold" data-bs-toggle="tab" data-bs-target="#tab-anamnese" type="button">1. Anamnese Infantojuvenil (Viver de Neuropsicologia)</button></li>
+    <li class="nav-item"><button class="nav-link fw-bold" data-bs-toggle="tab" data-bs-target="#tab-semanal" type="button">2. Relatório Semanal Psicodiagnóstico</button></li>
+    <li class="nav-item"><button class="nav-link fw-bold" data-bs-toggle="tab" data-bs-target="#tab-laudo" type="button">3. Laudo Psicológico (CFP 06/2019)</button></li>
+</ul>
+
+<div class="tab-content">
+    <!-- MODELO 1: ANAMNESE INFANTOJUVENIL -->
+    <div class="tab-pane fade show active" id="tab-anamnese">
+        <form method="POST" class="card border-0 shadow-sm p-4">
+            <input type="hidden" name="tipo_documento" value="ANAMNESE_INFANTOJUVENIL">
+            <h4 class="fw-bold text-gv-primary mb-3">VIVER DE NEUROPSICOLOGIA — ANAMNESE INFANTOJUVENIL</h4>
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label fw-bold">Paciente *</label>
+                    <select name="paciente_id" class="form-select" required>
+                        {% for p in pacientes %}<option value="{{ p.id }}">{{ p.nome_completo }}</option>{% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4"><label class="form-label fw-bold">Responsável participante</label><input type="text" name="responsavel_participante" class="form-control"></div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Formato de Download</label>
+                    <select name="formato_download" class="form-select"><option value="pdf">PDF (.pdf)</option><option value="docx">Word (.docx)</option></select>
+                </div>
+
+                <h6 class="fw-bold text-primary mt-4">1. DADOS DO PACIENTE</h6>
+                <div class="col-md-3"><label class="form-label">Data de nascimento</label><input type="text" name="data_nascimento" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Naturalidade</label><input type="text" name="naturalidade" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Com quem reside</label><input type="text" name="com_quem_reside" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Motivo (se não com os pais)</label><input type="text" name="motivo_nao_pais" class="form-control"></div>
+
+                <h6 class="fw-bold text-primary mt-4">2. DADOS DE IDENTIFICAÇÃO DOS PAIS</h6>
+                <div class="col-md-4"><label class="form-label">Nome do Pai</label><input type="text" name="pai_nome" class="form-control"></div>
+                <div class="col-md-2"><label class="form-label">Idade</label><input type="text" name="pai_idade" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Grau de Instrução</label><input type="text" name="pai_instrucao" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Telefone</label><input type="text" name="pai_telefone" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Profissão</label><input type="text" name="pai_profissao" class="form-control"></div>
+                <div class="col-md-2"><label class="form-label">Estado Civil</label><input type="text" name="pai_estado_civil" class="form-control"></div>
+                <div class="col-md-6"><label class="form-label">Endereço / Onde reside</label><input type="text" name="pai_endereco" class="form-control"></div>
+                <div class="col-12"><label class="form-label">Histórico de doença mental familiar, vícios e/ou outras doenças (Pai)</label><input type="text" name="pai_historico_saude" class="form-control"></div>
+
+                <div class="col-md-4"><label class="form-label">Nome da Mãe</label><input type="text" name="mae_nome" class="form-control"></div>
+                <div class="col-md-2"><label class="form-label">Idade</label><input type="text" name="mae_idade" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Grau de Instrução</label><input type="text" name="mae_instrucao" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Telefone</label><input type="text" name="mae_telefone" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Profissão</label><input type="text" name="mae_profissao" class="form-control"></div>
+                <div class="col-md-2"><label class="form-label">Estado Civil</label><input type="text" name="mae_estado_civil" class="form-control"></div>
+                <div class="col-md-6"><label class="form-label">Endereço</label><input type="text" name="mae_endereco" class="form-control"></div>
+                <div class="col-12"><label class="form-label">Histórico de doença mental familiar, vícios e/ou outras doenças (Mãe)</label><input type="text" name="mae_historico_saude" class="form-control"></div>
+
+                <h6 class="fw-bold text-primary mt-4">3. DADOS DO ENCAMINHAMENTO</h6>
+                <div class="col-md-4"><label class="form-label">Encaminhamento</label><input type="text" name="encaminhamento" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Possui algum diagnóstico</label><input type="text" name="possui_diagnostico" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Data</label><input type="text" name="data_entrevista" class="form-control" placeholder="dd/mm/aaaa"></div>
+                <div class="col-12"><label class="form-label">Queixa principal</label><textarea name="queixa_principal" class="form-control" rows="2"></textarea></div>
+
+                <h6 class="fw-bold text-primary mt-4">4. CONHECENDO MELHOR A CRIANÇA/ADOLESCENTE</h6>
+                <div class="col-md-4"><label class="form-label">Gravidez desejada?</label><input type="text" name="gravidez_desejada" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Fez pré-natal?</label><input type="text" name="pre_natal" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Tipo de parto</label><input type="text" name="tipo_parto" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Local nascimento</label><input type="text" name="local_nascimento" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Semanas gestacionais</label><input type="text" name="semanas_gestacionais" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Medicações na gestação</label><input type="text" name="medicacoes_gestacao" class="form-control"></div>
+                <div class="col-md-6"><label class="form-label">Cigarro/álcool/drogas na gestação (tipo e frequência)</label><input type="text" name="drogas_gestacao" class="form-control"></div>
+                <div class="col-md-6"><label class="form-label">Queda, susto ou doenças na gravidez</label><input type="text" name="intercorrencias_gravidez" class="form-control"></div>
+                <div class="col-12"><label class="form-label">Informações sobre período gestacional</label><input type="text" name="info_gestacional" class="form-control"></div>
+
+                <div class="col-md-3"><label class="form-label">Apgar</label><input type="text" name="apgar" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Amamentação (Sim/Não)</label><input type="text" name="amamentacao" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Tempo amamentação</label><input type="text" name="tempo_amamentacao" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Controle cabeça / Sentou</label><input type="text" name="controle_cabeca" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Engatinhou / Andou</label><input type="text" name="andou" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Balbuciou / Falou</label><input type="text" name="falou" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Amarrar sapatos / Vestir-se</label><input type="text" name="vestir_sozinho" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Controle urina e fezes</label><input type="text" name="controle_urina" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Chupeta / Fraldas / Dorme sozinho</label><input type="text" name="dorme_sozinho" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Ranger dentes / Rói unhas</label><input type="text" name="ranger_dentes" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label">Rotina e adaptação</label><input type="text" name="rotina_crianca" class="form-control"></div>
+                <div class="col-md-6"><label class="form-label">Como é o brincar / Medos / O que deixa nervoso</label><input type="text" name="como_brinca" class="form-control"></div>
+                <div class="col-md-6"><label class="form-label">Histórico Médico (saúde, sono, cirurgias, terapias, remédios)</label><input type="text" name="estado_saude" class="form-control"></div>
+                <div class="col-md-6"><label class="form-label">Sexualidade e Outras Informações (telas, limites, disciplina, habilidades)</label><input type="text" name="tempo_tela" class="form-control"></div>
+                <div class="col-md-6"><label class="form-label">Dificuldades Específicas (fala, atenção, memória, planejamento, matemática)</label><input type="text" name="outras_dificuldades" class="form-control"></div>
+                <div class="col-12"><label class="form-label">Desenvolvimento Escolar (escola, série, período, leitura/escrita, queixas, reprovação)</label><textarea name="queixas_escolares" class="form-control" rows="2"></textarea></div>
+
+                <div class="col-12 mt-3">
+                    <button type="submit" class="btn btn-gv-primary px-4 fw-bold"><i class="bi bi-download"></i> Salvar na Pasta do Paciente e Baixar Arquivo</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- MODELO 2: RELATÓRIO SEMANAL PSICODIAGNÓSTICO -->
+    <div class="tab-pane fade" id="tab-semanal">
+        <form method="POST" class="card border-0 shadow-sm p-4">
+            <input type="hidden" name="tipo_documento" value="RELATORIO_SEMANAL">
+            <h4 class="fw-bold text-gv-primary mb-3">RELATÓRIO SEMANAL — ESTÁGIO / ATENDIMENTO EM PSICODIAGNÓSTICO</h4>
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label fw-bold">Paciente / Usuário(a) *</label>
+                    <select name="paciente_id" class="form-select" required>
+                        {% for p in pacientes %}<option value="{{ p.id }}">{{ p.nome_completo }}</option>{% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4"><label class="form-label fw-bold">Campus / Unidade</label><input type="text" name="campus" class="form-control" value="CLÍNICA GRAZIELE VENANCIO"></div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Formato Download</label>
+                    <select name="formato_download" class="form-select"><option value="pdf">PDF (.pdf)</option><option value="docx">Word (.docx)</option></select>
+                </div>
+                <div class="col-md-3"><label class="form-label">Curso / Semestre</label><input type="text" name="semestre" class="form-control" value="Psicologia / 2026"></div>
+                <div class="col-md-5"><label class="form-label">Profissional / Estagiário(s)</label><input type="text" name="estagiarios" class="form-control" value="{{ psi.usuario.nome }}"></div>
+                <div class="col-md-4"><label class="form-label">RGM / Registro</label><input type="text" name="rgm" class="form-control" value="{{ psi.crp }}"></div>
+                <div class="col-md-4"><label class="form-label">Psicólogo(a) / Professor(a) Orientador(a)</label><input type="text" name="orientador" class="form-control" value="{{ psi.usuario.nome }}"></div>
+                <div class="col-md-2"><label class="form-label">CRP</label><input type="text" name="crp_orientador" class="form-control" value="{{ psi.crp }}"></div>
+                <div class="col-md-2"><label class="form-label">Sexo</label><input type="text" name="sexo" class="form-control"></div>
+                <div class="col-md-2"><label class="form-label">Idade</label><input type="text" name="idade" class="form-control"></div>
+                <div class="col-md-2"><label class="form-label">Nº Sessão</label><input type="text" name="numero_sessao" class="form-control" value="1ª SESSÃO"></div>
+
+                <div class="col-md-3"><label class="form-label">Data do Atendimento</label><input type="text" name="data_atendimento" class="form-control" placeholder="dd/mm/aaaa"></div>
+                <div class="col-md-3"><label class="form-label">Sala</label><input type="text" name="sala" class="form-control" value="Sala 01"></div>
+                <div class="col-md-3"><label class="form-label">Dia da Semana</label><input type="text" name="dia_semana" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label">Hora</label><input type="text" name="hora" class="form-control"></div>
+
+                <div class="col-12"><label class="form-label fw-bold">I – Relato de Avaliação (Etapa conduzida da avaliação)</label><textarea name="relato_avaliacao" class="form-control" rows="3" required></textarea></div>
+                <div class="col-12"><label class="form-label fw-bold">II – Observações comportamentais</label><textarea name="observacoes_comportamentais" class="form-control" rows="3" required></textarea></div>
+                <div class="col-12"><label class="form-label fw-bold">III – Correção dos instrumentos</label><textarea name="correcao_instrumentos" class="form-control" rows="2"></textarea></div>
+                <div class="col-12"><label class="form-label fw-bold">IV – Fundamentação Teórica</label><textarea name="fundamentacao_teorica" class="form-control" rows="3"></textarea></div>
+                <div class="col-12"><label class="form-label fw-bold">V – Orientações após a supervisão</label><textarea name="orientacoes_supervisao" class="form-control" rows="2"></textarea></div>
+
+                <div class="col-12 mt-3">
+                    <button type="submit" class="btn btn-gv-primary px-4 fw-bold"><i class="bi bi-download"></i> Salvar na Pasta do Paciente e Baixar Arquivo</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- MODELO 3: LAUDO PSICOLÓGICO (CFP 06/2019) -->
+    <div class="tab-pane fade" id="tab-laudo">
+        <form method="POST" class="card border-0 shadow-sm p-4">
+            <input type="hidden" name="tipo_documento" value="LAUDO_PSICODIAGNOSTICO">
+            <h4 class="fw-bold text-gv-primary mb-3">LAUDO PSICOLÓGICO — RESOLUÇÃO CFP Nº 06/2019</h4>
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label fw-bold">Pessoa Atendida (Paciente) *</label>
+                    <select name="paciente_id" class="form-select" required>
+                        {% for p in pacientes %}<option value="{{ p.id }}">{{ p.nome_completo }}</option>{% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4"><label class="form-label fw-bold">Solicitante</label><input type="text" name="solicitante" class="form-control"></div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Formato Download</label>
+                    <select name="formato_download" class="form-select"><option value="pdf">PDF (.pdf)</option><option value="docx">Word (.docx)</option></select>
+                </div>
+                <div class="col-md-3"><label class="form-label">Nº Prontuário</label><input type="text" name="numero_prontuario" class="form-control"></div>
+                <div class="col-md-9"><label class="form-label">Finalidade</label><input type="text" name="finalidade" class="form-control" value="Avaliação Psicológica / Psicodiagnóstico"></div>
+                <div class="col-md-6"><label class="form-label">Autores / Estagiários</label><input type="text" name="autores" class="form-control" value="{{ psi.usuario.nome }}"></div>
+                <div class="col-md-4"><label class="form-label">Psicólogo(a) Responsável</label><input type="text" name="psicologo_responsavel" class="form-control" value="{{ psi.usuario.nome }}"></div>
+                <div class="col-md-2"><label class="form-label">CRP</label><input type="text" name="crp" class="form-control" value="{{ psi.crp }}"></div>
+
+                <div class="col-12"><label class="form-label fw-bold">2. DESCRIÇÃO DA DEMANDA</label><textarea name="descricao_demanda" class="form-control" rows="3" required></textarea></div>
+                <div class="col-12"><label class="form-label fw-bold">3. PROCEDIMENTO (Período, nº sessões, entrevistas e instrumentos)</label><textarea name="procedimento_tecnico" class="form-control" rows="3" required></textarea></div>
+                <div class="col-12"><label class="form-label fw-bold">4. ANÁLISE (Exposição descritiva e fundamentada - CFP 06/2019)</label><textarea name="analise_clinica" class="form-control" rows="4" required></textarea></div>
+                <div class="col-12"><label class="form-label fw-bold">5. CONCLUSÃO (Síntese, hipótese diagnóstica, prognóstico e encaminhamentos)</label><textarea name="conclusao_encaminhamentos" class="form-control" rows="3" required></textarea></div>
+                <div class="col-12"><label class="form-label fw-bold">REFERÊNCIAS BIBLIOGRÁFICAS (Normas ABNT)</label><textarea name="referencias_bibliograficas" class="form-control" rows="2">CONSELHO FEDERAL DE PSICOLOGIA. Resolução Nº 6, de 29 de março de 2019. Brasília: CFP, 2019.</textarea></div>
+                <div class="col-md-6"><label class="form-label">Local e Data</label><input type="text" name="local_data" class="form-control" value="São Paulo, 2026"></div>
+
+                <div class="col-12 mt-3">
+                    <button type="submit" class="btn btn-gv-primary px-4 fw-bold"><i class="bi bi-download"></i> Salvar na Pasta do Paciente e Baixar Arquivo</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="fw-bold text-gv-primary mb-3">Configurações da Clínica & Dados Obrigatórios ("Quem Somos Nós")</h3>
+<form method="POST" class="card border-0 shadow-sm p-4">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Nome da Clínica *</label>
+            <input type="text" name="nome_clinica" class="form-control" value="{{ config.nome_clinica }}" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-bold">CNPJ *</label>
+            <input type="text" name="cnpj" class="form-control" value="{{ config.cnpj }}" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Valor Padrão Consulta (R$) *</label>
+            <input type="number" step="0.01" name="valor_consulta_padrao" class="form-control" value="{{ config.valor_consulta_padrao }}" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Endereço Completo *</label>
+            <input type="text" name="endereco" class="form-control" value="{{ config.endereco }}" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Telefone *</label>
+            <input type="text" name="telefone" class="form-control" value="{{ config.telefone }}" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-bold">E-mail de Contato *</label>
+            <input type="email" name="email_contato" class="form-control" value="{{ config.email_contato }}" required>
+        </div>
+        <hr class="my-3">
+        <h5 class="fw-bold text-gv-primary">Seção "Quem Somos Nós" (Exibida na Homepage)</h5>
+        <div class="col-md-4">
+            <label class="form-label fw-bold">Título da Seção *</label>
+            <input type="text" name="quem_somos_titulo" class="form-control" value="{{ config.quem_somos_titulo }}" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label fw-bold">Nome do(a) Especialista *</label>
+            <input type="text" name="especialista_nome" class="form-control" value="{{ config.especialista_nome }}" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label fw-bold">CRP Obrigatório *</label>
+            <input type="text" name="especialista_crp" class="form-control" value="{{ config.especialista_crp }}" required>
+        </div>
+        <div class="col-12">
+            <label class="form-label fw-bold">Texto Institucional (Quem Somos Nós) *</label>
+            <textarea name="quem_somos_texto" class="form-control" rows="3" required>{{ config.quem_somos_texto }}</textarea>
+        </div>
+        <div class="col-12">
+            <label class="form-label fw-bold">Formação e Currículo da Especialista *</label>
+            <textarea name="especialista_formacao" class="form-control" rows="3" required>{{ config.especialista_formacao }}</textarea>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-gv-primary px-4">Salvar Alterações</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

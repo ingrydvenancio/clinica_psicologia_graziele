@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="fw-bold text-gv-primary mb-3">Gerenciamento de Usuários e Permissões</h3>
+<div class="card border-0 shadow-sm p-4 mb-4">
+    <h5 class="fw-bold mb-3">Cadastrar Novo Usuário</h5>
+    <form method="POST" class="row g-3">
+        <div class="col-md-4">
+            <label class="form-label">Nome Completo</label>
+            <input type="text" name="nome" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">E-mail (Login)</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Senha Inicial</label>
+            <input type="password" name="senha" class="form-control" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Perfil de Acesso</label>
+            <select name="perfil" class="form-select" required>
+                <option value="PSICOLOGO">Psicólogo / Doutor Especialista</option>
+                <option value="RECEPCIONISTA">Recepcionista</option>
+                <option value="ADMINISTRADOR">Administrador</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">CRP (se Psicólogo)</label>
+            <input type="text" name="crp" class="form-control" placeholder="CRP 06/000000">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Especialidade / Turno</label>
+            <input type="text" name="especialidade" class="form-control" placeholder="Neuropsicologia">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Telefone</label>
+            <input type="text" name="telefone" class="form-control">
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-gv-primary">Cadastrar Usuário</button>
+        </div>
+    </form>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Status</th><th>Ações</th></tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td class="fw-bold">{{ u.nome }}</td>
+                    <td>{{ u.email }}</td>
+                    <td><span class="badge bg-info text-dark">{{ u.perfil }}</span></td>
+                    <td>
+                        {% if u.ativo %}<span class="badge bg-success">Ativo</span>
+                        {% else %}<span class="badge bg-danger">Bloqueado</span>{% endif %}
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin.toggle_usuario', user_id=u.id) }}" class="d-inline">
+                            <button class="btn btn-sm btn-outline-warning">{{ 'Bloquear' if u.ativo else 'Desbloquear' }}</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

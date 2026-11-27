@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card border-0 shadow-sm p-5 text-center mx-auto" style="max-width: 600px;">
+    <i class="bi bi-check-circle-fill text-success display-1 mb-3"></i>
+    <h2 class="fw-bold text-gv-primary">Presença Confirmada!</h2>
+    <p class="lead">Obrigado, <strong>{{ consulta.paciente.nome_completo }}</strong>.</p>
+    <p class="text-muted">Sua consulta com <strong>{{ consulta.psicologo.usuario.nome }}</strong> está confirmada para o dia <strong>{{ consulta.data_hora.strftime('%d/%m/%Y às %H:%M') }}</strong>.</p>
+    <a href="{{ url_for('public.index') }}" class="btn btn-gv-primary mt-3">Voltar ao Início</a>
+</div>
+{% endblock %}
