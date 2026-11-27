@@ -8,7 +8,7 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key-clinica-gv-2026")
+    SECRET_KEY = os.getenv("SECRET_KEY")
 
     DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
     DB_PORT = os.getenv("DB_PORT", "3306")
